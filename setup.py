@@ -11,7 +11,7 @@ def main(page: ft.Page):
 class App:
 
     def __init__(self, page: ft.Page):
-       raise NotImplementedError
+        raise NotImplementedError
 
 
 ft.app(target=main)
