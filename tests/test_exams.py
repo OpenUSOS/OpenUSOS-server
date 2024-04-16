@@ -11,16 +11,15 @@ from setup import App
 from src.pages.exams import Exams
 
 
-
 class TestExams(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.connect_app()
 
     @classmethod
-    def connect_app(self):
-        self._app = None
-        self._page = None
+    def connect_app(cls):
+        cls._app = None
+        cls._page = None
 
     def test_display(self):
         exams = Exams(self._app, self._page)
@@ -31,16 +30,31 @@ class TestExams(unittest.TestCase):
         with patch.object(USOSAPIConnection, 'get') as mock_get:
             mock_get.return_value = {'22/23': {}, '23/24': {}}
 
-            exams = Exams(self._app, self._page)
-            self.assertIsInstance(exams.data,  dict)
-            self.assertDictEqual(exams.data, {'22/23': {}, '23/24': {}})
+            exams= Exams(self._app, self._page)
+            value = exams.get_data()
+            self.assertIsInstance(value,  dict) # is value a dict
+            self.assertDictEqual(value, {'22/23': {}, '23/24': {}}) # is value the right dict
+            self.assertEqual(value, exams.data) # is value the same as data (was data initialized properly)
 
+    def test_display_buttons(self):
+        exams = Exams(self._app, self._page)
+        displayed = exams.display()
+        control_list = [displayed.controls]
+        while len(control_list) > 0:
+            current_control = control_list.pop()
+            control_list.extend(current_control.controls)
+            if (isinstance(current_control, ft.ElevatedButton) or isinstance(current_control, ft.FloatingActionButton)
+                    or isinstance(current_control, ft.TextButton) or isinstance(current_control, ft.IconButton)
+                    or isinstance(current_control, ft.PopupMenuButton) or isinstance(current_control, ft.OutlinedButton)
+                    or isinstance(current_control, ft.CupertinoButton)):
+                self.assertFalse(current_control.on_click is None)
+                self.assertTrue(callable(current_control.on_click))
 
 
 def run_tests(app: App, page: ft.Page):
-    TestGrades._app = app
-    TestGrades._page = page
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestGrades)
+    TestExams._app = app
+    TestExams._page = page
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestExams)
     unittest.TextTestRunner().run(suite)
 
 

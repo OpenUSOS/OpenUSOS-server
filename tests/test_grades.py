@@ -17,9 +17,9 @@ class TestGrades(unittest.TestCase):
         self.connect_app()
 
     @classmethod
-    def connect_app(self):
-        self._app = None
-        self._page = None
+    def connect_app(cls):
+        cls._app = None
+        cls._page = None
 
     def test_display(self):
         grades = Grades(self._app, self._page)
@@ -31,9 +31,10 @@ class TestGrades(unittest.TestCase):
             mock_get.return_value = {'22/23': {}, '23/24': {}}
 
             grades = Grades(self._app, self._page)
-            grades.get_data()
-            self.assertIsInstance(grades.data,  dict)
-            self.assertDictEqual(grades.data, {'22/23': {}, '23/24': {}})
+            value = grades.get_data()
+            self.assertIsInstance(value,  dict) # is value a dict
+            self.assertDictEqual(value, {'22/23': {}, '23/24': {}}) # is value the right dict
+            self.assertEqual(value, grades.data) # is value the same as grades.data (was data initialized properly)
 
     def test_display_buttons(self):
         grades = Grades(self._app, self._page)
