@@ -11,7 +11,7 @@ class Grades(ViewInterface):
     def get_data(self):
         raise NotImplementedError
 
-    def display(self):
+    def display(self) -> ft.View:
         raise NotImplementedError
 
 
