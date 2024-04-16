@@ -4,11 +4,12 @@ import unittest
 import flet as ft
 from unittest.mock import patch
 
+sys.path.append(str(Path(__file__).resolve().parents[1]))
+
 from src.usosapi import USOSAPIConnection
 from setup import App
 from src.pages.grades import Grades
 
-sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 
 class TestGrades(unittest.TestCase):
@@ -26,15 +27,14 @@ class TestGrades(unittest.TestCase):
         displayed = grades.display()
         self.assertIsInstance(displayed, ft.View)
 
-
-    def test_get_data_correct(self):
+    def test_get_data(self):
         with patch.object(USOSAPIConnection, 'get') as mock_get:
             mock_get.return_value = {'22/23': {}, '23/24': {}}
 
             grades = Grades(self._app, self._page)
             self.assertIsInstance(grades.data,  dict)
-            con = USOSAPIConnection
-            print(con.get())
+            self.assertDictEqual(grades.data, {'22/23': {}, '23/24': {}})
+
 
 
 def run_tests(app: App, page: ft.Page):
