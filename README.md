@@ -1,6 +1,8 @@
 # OpenUSOS
 Authors: Oskar Kuliński, Filip Ciebiera, Wieńczysław Włodyga   
 An open source USOS mobile app, made for Software Engineering course 2023/2024 at Jagiellonian University.   
+### Current version: 0.0.0
+
 ## Our goals:
 ### Must have:
 -working app for Jagiellonian University,  
