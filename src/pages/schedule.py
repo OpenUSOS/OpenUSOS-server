@@ -5,6 +5,7 @@ from ..interface import ViewInterface
 class Schedule(ViewInterface):
 
     def __init__(self, app, page: ft.Page):
+        self.data = self.get_data()
         raise NotImplementedError
 
     def get_data(self):
