@@ -8,10 +8,10 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from src.usosapi import USOSAPIConnection
 from setup import App
-from src.pages.exams import Exams
+from src.pages.course_tests import Tests
 
 
-class TestExams(unittest.TestCase):
+class TestTests(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.connect_app()
@@ -22,23 +22,23 @@ class TestExams(unittest.TestCase):
         cls._page = None
 
     def test_display(self):
-        exams = Exams(self._app, self._page)
-        displayed = exams.display()
+        tests = Tests(self._app, self._page)
+        displayed = tests.display()
         self.assertIsInstance(displayed, ft.View)
 
     def test_get_data(self):
         with patch.object(USOSAPIConnection, 'get') as mock_get:
             mock_get.return_value = {'22/23': {}, '23/24': {}}
 
-            exams= Exams(self._app, self._page)
-            value = exams.get_data()
+            tests = Tests(self._app, self._page)
+            value = tests.get_data()
             self.assertIsInstance(value,  dict) # is value a dict
             self.assertDictEqual(value, {'22/23': {}, '23/24': {}}) # is value the right dict
-            self.assertEqual(value, exams.data) # is value the same as data (was data initialized properly)
+            self.assertEqual(value, tests.data) # is value the same as data (was data initialized properly)
 
     def test_display_buttons(self):
-        exams = Exams(self._app, self._page)
-        displayed = exams.display()
+        tests = Tests(self._app, self._page)
+        displayed = tests.display()
         control_list = [displayed.controls]
         while len(control_list) > 0:
             current_control = control_list.pop()
@@ -52,9 +52,9 @@ class TestExams(unittest.TestCase):
 
 
 def run_tests(app: App, page: ft.Page):
-    TestExams._app = app
-    TestExams._page = page
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestExams)
+    TestTests._app = app
+    TestTests._page = page
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestTests)
     unittest.TextTestRunner().run(suite)
 
 

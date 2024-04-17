@@ -2,7 +2,7 @@ import flet as ft
 from ..interface import ViewInterface
 
 
-class Exams(ViewInterface):
+class Tests(ViewInterface):
 
     def __init__(self, app, page: ft.Page):
         self.data = self.get_data()
