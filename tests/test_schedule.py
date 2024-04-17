@@ -48,7 +48,7 @@ class TestSchedule(unittest.TestCase):
 
             schedule = Schedule(self._app, self._page)
             value = schedule.get_data()
-            self.assertIsInstance(value, list)  # is value a dict
+            self.assertIsInstance(value, list)  # is value a list
             self.assertListEqual(value, to_return)  # is value the right list
             self.assertEqual(value, schedule.data)  # is value the same as grades.data (was data initialized properly)
 

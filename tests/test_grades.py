@@ -52,7 +52,6 @@ class TestGrades(unittest.TestCase):
 
 
 def run_tests(app: App, page: ft.Page):
-    raise KeyError
     TestGrades._app = app
     TestGrades._page = page
     suite = unittest.TestLoader().loadTestsFromTestCase(TestGrades)
