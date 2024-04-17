@@ -35,7 +35,7 @@ class TestAcademicActivity(unittest.TestCase):
             activity = AcademicActivity(self._app, self._page)
             value = activity.get_data()
             self.assertIsInstance(value,  list) # is value a dict
-            self.assertListEqual(value, to_return) # is value the right dict
+            self.assertListEqual(value, to_return) # is value the right list
             self.assertEqual(value, activity.data) # is value the same as grades.data (was data initialized properly)
 
     def test_display_buttons(self):
@@ -55,7 +55,6 @@ class TestAcademicActivity(unittest.TestCase):
 
 def run_tests(app: App, page: ft.Page):
     TestAcademicActivity._app = app
-    print('chuj')
     TestAcademicActivity._page = page
     suite = unittest.TestLoader().loadTestsFromTestCase(TestAcademicActivity)
     unittest.TextTestRunner().run(suite)
