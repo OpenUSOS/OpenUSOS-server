@@ -28,12 +28,14 @@ class TestAcademicActivity(unittest.TestCase):
 
     def test_get_data(self):
         with patch.object(USOSAPIConnection, 'get') as mock_get: # TODO needs changing
-            mock_get.return_value = {'22/23': {}, '23/24': {}}
+            to_return = [{'type': 'classgroup', 'start_time': '2024-04-19 10:30:00', 'end_time': '2024-04-19 12:45:00',
+                          'name': {'en':'software engineering - laboratory', 'pl': 'inżynieria oprogramowania - laboratoria'}}]
+            mock_get.return_value = to_return
 
             activity = AcademicActivity(self._app, self._page)
             value = activity.get_data()
-            self.assertIsInstance(value,  dict) # is value a dict
-            self.assertDictEqual(value, {'22/23': {}, '23/24': {}}) # is value the right dict
+            self.assertIsInstance(value,  list) # is value a dict
+            self.assertListEqual(value, to_return) # is value the right list
             self.assertEqual(value, activity.data) # is value the same as grades.data (was data initialized properly)
 
     def test_display_buttons(self):
@@ -53,7 +55,6 @@ class TestAcademicActivity(unittest.TestCase):
 
 def run_tests(app: App, page: ft.Page):
     TestAcademicActivity._app = app
-    print('chuj')
     TestAcademicActivity._page = page
     suite = unittest.TestLoader().loadTestsFromTestCase(TestAcademicActivity)
     unittest.TextTestRunner().run(suite)
@@ -63,7 +64,6 @@ def main(page: ft.Page):
     app = App(page)
 
 
-if __name__ == "__main__":
-    ft.app(target=main)
+ft.app(target=main)
 
 

@@ -28,12 +28,14 @@ class TestUser(unittest.TestCase):
 
     def test_get_data(self):
         with patch.object(USOSAPIConnection, 'get') as mock_get: # TODO needs changing
-            mock_get.return_value = {'22/23': {}, '23/24': {}}
+
+            mock_get.return_value = {'id': '123456', 'first_name': 'aaa', 'last_name' : 'bbb'}
 
             user = User(self._app, self._page)
             value = user.get_data()
             self.assertIsInstance(value,  dict) # is value a dict
-            self.assertDictEqual(value, {'22/23': {}, '23/24': {}}) # is value the right dict
+            self.assertDictEqual(value, {'id': '123456', 'first_name': 'aaa', 'last_name' : 'bbb'})
+            #  is value the right dict
             self.assertEqual(value, user.data) # is value the same as grades.data (was data initialized properly)
 
     def test_display_buttons(self):
