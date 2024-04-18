@@ -56,6 +56,7 @@ class TestGrades(unittest.TestCase):
                 if args and args[0] == 'services/mailclient/send_message': #if we are sending the message
                     #test if message was send correctly, directory should be empty
                     self.assertDictEqual(original_get(*args, *kwargs), {})
+                    return original_get(*args, **kwargs)
                 else: #else return the original get value, so that function works properly
                     return original_get(*args, **kwargs)
                 
