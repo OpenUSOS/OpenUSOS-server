@@ -27,14 +27,30 @@ class TestSchedule(unittest.TestCase):
         self.assertIsInstance(displayed, ft.View)
 
     def test_get_data(self):
-        with patch.object(USOSAPIConnection, 'get') as mock_get: # TODO needs changing
-            mock_get.return_value = {'22/23': {}, '23/24': {}}
+        with patch.object(USOSAPIConnection, 'get') as mock_get:  # TODO needs changing
+            to_return = [{
+                "start_time": "2024-04-25 10:15:00",
+                "end_time": "2024-04-25 11:45:00",
+                "name": {
+                    "pl": "Rachunek prawdopodobieństwa i statystyka - Wykład",
+                    "en": "Probability and Statistics - Lecture"
+                }
+            },
+                {
+                    "start_time": "2024-04-25 11:30:00",
+                    "end_time": "2024-04-25 13:00:00",
+                    "name": {
+                        "pl": "Język hiszpański - B1 - 30 godzin/2 semestr - Lektorat",
+                        "en": "Spanish Interfaculty Group - Foreign language class"
+                    }
+                }]
+            mock_get.return_value = to_return
 
             schedule = Schedule(self._app, self._page)
             value = schedule.get_data()
-            self.assertIsInstance(value,  dict) # is value a dict
-            self.assertDictEqual(value, {'22/23': {}, '23/24': {}}) # is value the right dict
-            self.assertEqual(value, schedule.data) # is value the same as grades.data (was data initialized properly)
+            self.assertIsInstance(value, list)  # is value a list
+            self.assertListEqual(value, to_return)  # is value the right list
+            self.assertEqual(value, schedule.data)  # is value the same as grades.data (was data initialized properly)
 
     def test_display_buttons(self):
         schedule = Schedule(self._app, self._page)
@@ -62,7 +78,4 @@ def main(page: ft.Page):
     app = App(page)
 
 
-if __name__ == "__main__":
-    ft.app(target=main)
-
-
+ft.app(target=main)

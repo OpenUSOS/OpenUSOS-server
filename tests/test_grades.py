@@ -60,9 +60,8 @@ def run_tests(app: App, page: ft.Page):
 
 def main(page: ft.Page):
     app = App(page)
+    run_tests(app, app.page)
 
 
-if __name__ == "__main__":
-    ft.app(target=main)
-
+ft.app(target=main)
 

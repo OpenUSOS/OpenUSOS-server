@@ -2,19 +2,17 @@ import flet as ft
 from ..interface import ViewInterface
 
 
-class AcademicActivity(ViewInterface):
+class User(ViewInterface):
 
     def __init__(self, app, page: ft.Page):
-        self.data = self.get_data()
+        self.data = dict
         raise NotImplementedError
 
     def get_data(self):
         raise NotImplementedError
 
-    def display(self):
+    def display(self) -> ft.View:
         raise NotImplementedError
-
-
 
 
 
