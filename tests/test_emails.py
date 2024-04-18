@@ -11,7 +11,7 @@ from setup import App
 from src.pages.emails import Emails
 
 
-class TestGrades(unittest.TestCase):
+class TestEmails(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.connect_app()
@@ -69,9 +69,9 @@ class TestGrades(unittest.TestCase):
 
 
 def run_tests(app: App, page: ft.Page):
-    TestGrades._app = app
-    TestGrades._page = page
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestGrades)
+    Emails._app = app
+    Emails._page = page
+    suite = unittest.TestLoader().loadTestsFromTestCase(Emails)
     unittest.TextTestRunner().run(suite)
 
 
