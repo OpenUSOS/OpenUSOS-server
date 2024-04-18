@@ -45,9 +45,10 @@ class TestGrades(unittest.TestCase):
                 self.assertFalse(current_control.on_click is None)
                 self.assertTrue(callable(current_control.on_click))
     
-    def test_display_send(self): #???????????
-        with patch.object(USOSAPIConnection, 'get') as mock_get:
-            mock_get.return_value = ["aa", "bb", "cc"] 
+    def test_display_send(self):
+        sender = Emails(self._app, self._page)
+        displayed = sender.display()
+        self.assertIsInstance(displayed, ft.View)
 
 
     def test_send_email(self):
