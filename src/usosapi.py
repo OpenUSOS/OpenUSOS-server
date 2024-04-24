@@ -26,7 +26,6 @@ _ACCESS_TOKEN_SUFFIX = 'services/oauth/access_token'
 SCOPES = "offline_access|student_exams|email|mailclient|studies"
 # scopes are seperated with '|' (thanks for nothing documentation) 
 _LOGGER = logging.getLogger('USOSAPI')
-_DOWNLOAD_LOGGER = logging.getLogger('USOSAPI.download')
 
 
 class USOSAPIConnection():
