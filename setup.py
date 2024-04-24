@@ -16,7 +16,7 @@ class App:
 
     def __init__(self, page: ft.Page):
         self.api = USOSAPIConnection(Usosapi_base_url, Consumer_key, Consumer_secret)
-        #self.page = page
+        self.page = page
         self.connector = Usersession(self, page)
     
     def test(self):

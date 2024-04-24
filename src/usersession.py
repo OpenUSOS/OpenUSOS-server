@@ -5,6 +5,8 @@ import os
 class Usersession(ViewInterface):
 
     def __init__(self, app, page: ft.Page):
+        self.app = app
+        self.page = page
         pass
     
     #Trying to log in without token:

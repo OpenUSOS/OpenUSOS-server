@@ -16,18 +16,17 @@ class TestUsersession(unittest.TestCase):
 
     @classmethod
     def connect_app(cls):
-        cls._app = None
-        cls._page = None
+        cls._page = ft.Page
+        cls._app = App(cls._page)
 
     def test_login(self):
         self._app.connector.login()
-        self.assertTrue(self._app.api.test_connection())
+        self.assertTrue(self._app.api.is_authorized())
 
-    def test_login(self):
+    def test_logout(self):
         self._app.connector.login()
-        print("GAAGAGAAGGa")
         self._app.connector.logout()
-        self.assertFalse(self._app.api.test_connection())
+        self.assertFalse(self._app.api.is_authorized())
 
 
 def run_tests(app: App, page: ft.Page):
@@ -38,6 +37,7 @@ def run_tests(app: App, page: ft.Page):
 
 def main(page: ft.Page):
     app = App(page)
+    run_tests(app, page)
 
 
 if __name__ == "__main__":
