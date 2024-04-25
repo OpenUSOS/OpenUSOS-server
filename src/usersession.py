@@ -24,6 +24,17 @@ class Usersession(ViewInterface):
             return True
         else:
             return False
+        
+    # Function that will save Access token of user, allowing us to log in without authorization:
+    def Remember_me(self):
+        if os.path.exists("usos_token.txt"):
+            # First we delete this file if it exists:
+            os.remove("usos_token.txt")
+        AT, ATS = self.app.api.get_access_data()
+        with open("token.txt", "w") as file:
+            file.write(AT)
+            file.write("\n")
+            file.write(ATS)
 
     def login(self):
         #We try to login without url
@@ -40,6 +51,11 @@ class Usersession(ViewInterface):
                 PIN.replace(" ", "")
                 # Authorization:
                 self.app.api.authorize_with_pin(PIN)
+            anserw = input('Do you want not to be logged out? (Y/N).' )
+            while (anserw != 'Y' and anserw != 'N'):
+                anserw = input('Not a Y or N. Try again')
+            if (anserw == 'Y'):
+                self.Remember_me()
             
 
     def logout(self):

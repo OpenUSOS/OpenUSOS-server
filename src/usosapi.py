@@ -124,7 +124,7 @@ class USOSAPIConnection():
             now = anonymous_session.get('services/apisrv/now')
             now = now.json()
             return bool(re.match(time_re, now))
-        except Exception as e:
+        except Exception as e:  
             _LOGGER.debug('Connection test failed: {}'.format(e))
             return False
 

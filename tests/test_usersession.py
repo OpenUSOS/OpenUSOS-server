@@ -19,7 +19,7 @@ class TestUsersession(unittest.TestCase):
         cls._page = ft.Page
         cls._app = App(cls._page)
 
-    def test_login(self):
+    def test_login(self): 
         self._app.connector.login()
         self.assertTrue(self._app.api.is_authorized())
 
