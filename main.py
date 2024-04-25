@@ -11,7 +11,6 @@ Consumer_key = '748apdbMm3Ggh6KGXMyp'
 Consumer_secret = 'Y33JYY3vgjNym6aFP5qnxcMtE7WrejLt8VDjWS87'
 
 
-
 class Caller:
 
     def __init__(self):
@@ -49,6 +48,7 @@ def handle_two_arguments(arg1, arg2):
 
 #I am writing all api calls here:
 #calls should look like http://127.0.0.1:5000/api?query1=a&query2=bar or http://127.0.0.1:5000/api?query1=223456
+
 """
 1. query1 = try_logging_in, query2 empty ---- returns a string, url which has to be used to log in.
 WARNING! If option remember me was used, it just refreshes the session.
