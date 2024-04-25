@@ -1,13 +1,9 @@
-import flet as ft
-from .interface import ViewInterface
 import os
 
-class Usersession(ViewInterface):
+class Usersession():
 
-    def __init__(self, app, page: ft.Page):
-        self.app = app
-        self.page = page
-        pass
+    def __init__(self, caller):
+        self.caller = caller
     
     #Trying to log in without token:
     def no_url(self) -> bool:
@@ -20,51 +16,39 @@ class Usersession(ViewInterface):
         else: 
             return False
         
-        if(self.app.api.set_access_data(AT, ATS)):
+        if(self.caller.api.set_access_data(AT, ATS)):
             return True
         else:
             return False
         
     # Function that will save Access token of user, allowing us to log in without authorization:
-    def Remember_me(self):
+    def remember_me(self):
         if os.path.exists("usos_token.txt"):
             # First we delete this file if it exists:
             os.remove("usos_token.txt")
-        AT, ATS = self.app.api.get_access_data()
+        AT, ATS = self.caller.api.get_access_data()
         with open("token.txt", "w") as file:
             file.write(AT)
             file.write("\n")
             file.write(ATS)
+        return 'You will be kept logged in!'
 
-    def login(self):
-        #We try to login without url
+    def login(self, PIN):
+        # Authorization:
+        self.caller.api.authorize_with_pin(PIN)
+        if(self.caller.api.is_authorized() == False):
+            return 'Wrong PIN, try again'
+        else:
+            return 'You are now logged in'
+
+    def try_logging_in(self):
         if(self.no_url() == False):
-            #If we can't
-            AuthURL = self.app.api.get_authorization_url()
-            print(AuthURL) # Pass it to user somehow
-            PIN = input('What is the PIN code? ')
-            PIN.replace(" ", "")
-            # Authorization:
-            self.app.api.authorize_with_pin(PIN)
-            while (self.app.api.is_authorized() == False):
-                PIN = input('Wrong PIN. Try again. ')
-                PIN.replace(" ", "")
-                # Authorization:
-                self.app.api.authorize_with_pin(PIN)
-            anserw = input('Do you want not to be logged out? (Y/N).' )
-            while (anserw != 'Y' and anserw != 'N'):
-                anserw = input('Not a Y or N. Try again')
-            if (anserw == 'Y'):
-                self.Remember_me()
+            AuthURL = self.caller.api.get_authorization_url()
+            return AuthURL # Pass it to user somehow
+        else:
+            return 'You are already logged in!'
             
 
     def logout(self):
-        self.app.api.logout()
-    
-    def display(self):
-        return super().display()
-    
-    def get_data(self) -> dict:
-        return super().get_data()
-
-
+        self.caller.api.logout()
+        return 'You are now logged out!'

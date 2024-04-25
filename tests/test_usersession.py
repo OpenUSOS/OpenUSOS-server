@@ -1,44 +1,46 @@
 import sys
 from pathlib import Path
 import unittest
-import flet as ft
 from unittest.mock import patch
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 
-from setup import App
+from backend import Caller
 
 class TestUsersession(unittest.TestCase):
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.connect_app()
 
     @classmethod
     def connect_app(cls):
-        cls._page = ft.Page
-        cls._app = App(cls._page)
+        cls.caller = Caller()
 
-    def test_login(self): 
-        self._app.connector.login()
-        self.assertTrue(self._app.api.is_authorized())
+    def test_login(self):
+        url = self.caller.connector.try_logging_in()
+        print(url)
+        PIN = input("What is the PIN?")
+        self.caller.connector.login(PIN)
+        self.caller.connector.remember_me()
+        self.assertTrue(self.caller.api.is_authorized())
 
     def test_logout(self):
-        self._app.connector.login()
-        self._app.connector.logout()
-        self.assertFalse(self._app.api.is_authorized())
+        url = self.caller.connector.try_logging_in()
+        print(url)
+        self.caller.connector.logout()
+        self.assertFalse(self.caller.api.is_authorized())
 
 
-def run_tests(app: App, page: ft.Page):
-    TestUsersession._app = app
-    TestUsersession._page = page
+def run_tests(caller: Caller):
+    TestUsersession.caller = caller
     suite = unittest.TestLoader().loadTestsFromTestCase(TestUsersession)
     unittest.TextTestRunner().run(suite)
 
-def main(page: ft.Page):
-    app = App(page)
-    run_tests(app, page)
+def main():
+    caller = Caller()
+    run_tests(caller)
 
 
-if __name__ == "__main__":
-    ft.app(target=main)
+main()
