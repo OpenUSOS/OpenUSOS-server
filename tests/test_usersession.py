@@ -16,7 +16,7 @@ class TestUsersession(unittest.TestCase):
 
     @classmethod
     def connect_app(cls):
-        cls.caller = Caller()
+        cls.caller = Caller(123)
 
     def test_login(self):
         url = self.caller.connector.try_logging_in()
@@ -39,7 +39,7 @@ def run_tests(caller: Caller):
     unittest.TextTestRunner().run(suite)
 
 def main():
-    caller = Caller()
+    caller = Caller(1)
     run_tests(caller)
 
 
