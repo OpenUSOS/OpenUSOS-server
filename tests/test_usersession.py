@@ -6,7 +6,7 @@ from unittest.mock import patch
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 
-from main import Caller
+from app import Caller
 
 class TestUsersession(unittest.TestCase):
     
