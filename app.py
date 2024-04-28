@@ -1,5 +1,6 @@
 from flask import Flask, request
 import uuid
+import json
 
 from src.usosapi import USOSAPIConnection
 from src.usersession import Usersession
@@ -20,6 +21,7 @@ class Caller:
     
     def test(self):
         print("lalalalallalala")
+
 caller_instances = {}
 
 #One argument:
@@ -55,12 +57,16 @@ app = Flask(__name__)
 #Should be kept secret. Then, when using other methods use this id.
 
 """
+logging in/out:
+---------
 1. id, query1 = url, query2 empty ---- returns a string, url which has to be used to log in.
 2. id, query1 = log_in, query2 = PIN (The value)  ---- logging the user in. 
-returns the [access token] followed by [access token secret] used to resume the session, or 'N' if not succesful
+returns dict {'AT', ATS'} with [access token] and [access token secret] used to resume the session, or 'N' if not succesful
 3. id, query1 = resume, query2 [access token], query3 = [access token secret] ---- keeps the 
 user logged in. returns 'Y' if was successful, and 'N' if not.
 4. id, query1 = log_out, query2 empty ---- invalidates the access token.
+---------
+
 
 
 """

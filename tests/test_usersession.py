@@ -25,7 +25,9 @@ class TestUsersession(unittest.TestCase):
         url = self.caller.connector.url()
         print(url)
         PIN = input("What is the PIN?")
-        AT, ATS = self.caller.connector.log_in(PIN)
+        dict = self.caller.connector.log_in(PIN)
+        AT = dict['AT']
+        ATS = dict['ATS']
         self.assertTrue(self.caller.api.is_authorized())
 
     def test_logout(self):

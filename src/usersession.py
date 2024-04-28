@@ -19,7 +19,7 @@ class Usersession():
             return 'N'
         else:
             AT, ATS = self.caller.api.get_access_data()
-            return AT, ATS
+            return {'AT': AT, "ATS": ATS}
 
     def url(self):
         AuthURL = self.caller.api.get_authorization_url()
