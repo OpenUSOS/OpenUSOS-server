@@ -8,6 +8,9 @@ sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from app import Caller
 
+AT = '1'
+ATS = '2'
+
 class TestUsersession(unittest.TestCase):
     
     def __init__(self, *args, **kwargs):
@@ -19,17 +22,15 @@ class TestUsersession(unittest.TestCase):
         cls.caller = Caller(123)
 
     def test_login(self):
-        url = self.caller.connector.try_logging_in()
+        url = self.caller.connector.url()
         print(url)
         PIN = input("What is the PIN?")
-        self.caller.connector.login(PIN)
-        self.caller.connector.remember_me()
+        AT, ATS = self.caller.connector.log_in(PIN)
         self.assertTrue(self.caller.api.is_authorized())
 
     def test_logout(self):
-        url = self.caller.connector.try_logging_in()
-        print(url)
-        self.caller.connector.logout()
+        self.caller.connector.resume(AT, ATS)
+        self.caller.connector.log_out()
         self.assertFalse(self.caller.api.is_authorized())
 
 

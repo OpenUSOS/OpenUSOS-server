@@ -10,7 +10,7 @@ Usosapi_base_url = 'https://apps.usos.uj.edu.pl/'
 Consumer_key = '748apdbMm3Ggh6KGXMyp'
 Consumer_secret = 'Y33JYY3vgjNym6aFP5qnxcMtE7WrejLt8VDjWS87'
 
-
+#One caller object is associated with one session, one user, and one id.
 class Caller:
 
     def __init__(self, user_id):
@@ -22,46 +22,48 @@ class Caller:
         print("lalalalallalala")
 caller_instances = {}
 
+#One argument:
 def handle_one_argument(arg1, used_caller):
-    #Funkcje caller:
-    if arg1 == 'try_logging_in':
-        return used_caller.connector.try_logging_in()
-    elif arg1 == 'remember_me':
-        return used_caller.connector.remember_me()
+    if arg1 == 'url':
+        return used_caller.connector.url()
     elif arg1 == 'log_out':
-        return used_caller.connector.logout()
+        return used_caller.connector.log_out()
     else:
         return 'Not a valid call, check the spelling or contact me.'
 
 
-
+#Two arguments:
 def handle_two_arguments(arg1, arg2, used_caller):
     if arg1 == 'log_in':
         arg2 = int(arg2)
-        return used_caller.connector.login(arg2)
+        return used_caller.connector.log_in(arg2)
+    else: 
+        return 'Not a valid call, check the spelling or contact me.'
+    
+def handle_three_arguments(arg1, arg2, arg3, used_caller):
+    if arg1 == 'resume':
+        return used_caller.connector.resume(arg2, arg3)
     else:
         return 'Not a valid call, check the spelling or contact me.'
 
-
-
+app = Flask(__name__)
 
 #I am writing all api calls here:
 #calls should look like http://127.0.0.1:5000/api?id=12456772&query1=a&query2=bar or http://127.0.0.1:5000/api?id=12456772&query1=223456
-
+#They can have up to 4 arguments. first is always id, then query(nr of query)
 #IMPORTANT! First, you need to create a session using http://127.0.0.1:5000/login. It will return your id, that
 #Should be kept secret. Then, when using other methods use this id.
 
 """
-1. id, query1 = try_logging_in, query2 empty ---- returns a string, url which has to be used to log in.
-WARNING! If option remember me was used, it just refreshes the session.
-
-2. id, query1 = log_in, query2 = PIN (The value)  ---- logging the user in
-3. id, query1 = remember_me, query2 empty ---- keeps the user logged in
-4. id, query1 = log_out, query2 empty ---- logging user out
+1. id, query1 = url, query2 empty ---- returns a string, url which has to be used to log in.
+2. id, query1 = log_in, query2 = PIN (The value)  ---- logging the user in. 
+returns the [access token] followed by [access token secret] used to resume the session, or 'N' if not succesful
+3. id, query1 = resume, query2 [access token], query3 = [access token secret] ---- keeps the 
+user logged in. returns 'Y' if was successful, and 'N' if not.
+4. id, query1 = log_out, query2 empty ---- invalidates the access token.
 
 
 """
-app = Flask(__name__)
 
 
 #It has to be in one function, since it gets called everytime GET is made:
@@ -71,12 +73,19 @@ def call():
     id = request.args.get('id')
     query1 = request.args.get('query1', None)
     query2 = request.args.get('query2', None)
+    query3 = request.args.get('query3', None)
 
     if id not in caller_instances:
         return 'User not authenticated'
     used_caller = caller_instances[id]
+    #If three arguments given
+    if(query1 and query2 and query3):
+        query1 = str(query1)
+        query2 = str(query2)
+        query3 = str(query3)
+        return handle_three_arguments(query1,query2, query3, used_caller)
     #If two arguments given
-    if(query1 and query2):
+    elif(query1 and query2):
         query1 = str(query1)
         query2 = str(query2)
         return handle_two_arguments(query1,query2, used_caller)
