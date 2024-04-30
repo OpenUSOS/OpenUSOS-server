@@ -78,6 +78,7 @@ mail:
 ---------
 5. id, query1 = send_email, query2 = [recepient], query3 = [subject], query4 = [content] ---- sends an email to
 email adress given in [recepient], with subject given in [subject], and content given in [content].
+returns 'Y' if message was send sucessfully, and 'N' if not.
 
 
 

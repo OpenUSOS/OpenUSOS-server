@@ -14,12 +14,16 @@ class Usersession():
 
     def log_in(self, PIN):
         # Authorization:
-        self.caller.api.authorize_with_pin(PIN)
-        if(self.caller.api.is_authorized() == False):
+        try: 
+            self.caller.api.authorize_with_pin(PIN)
+            # We check if session is now authorized:
+            if(self.caller.api.is_authorized() == False):
+                return 'N'
+            else:
+                AT, ATS = self.caller.api.get_access_data()
+                return {'AT': AT, "ATS": ATS}
+        except:
             return 'N'
-        else:
-            AT, ATS = self.caller.api.get_access_data()
-            return {'AT': AT, "ATS": ATS}
 
     def url(self):
         AuthURL = self.caller.api.get_authorization_url()
