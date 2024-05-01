@@ -32,6 +32,8 @@ def handle_one_argument(arg1, used_caller):
         return used_caller.connector.url()
     elif arg1 == 'log_out':
         return used_caller.connector.log_out()
+    elif arg1 == 'get_emails':
+        return used_caller.email.get_emails()
     else:
         return 'Not a valid call, check the spelling or contact me.'
 
@@ -79,6 +81,8 @@ mail:
 5. id, query1 = send_email, query2 = [recepient], query3 = [subject], query4 = [content] ---- sends an email to
 email adress given in [recepient], with subject given in [subject], and content given in [content].
 returns 'Y' if message was send sucessfully, and 'N' if not.
+6. id, query1 = get_emails ---- returns a list of mails send by user, where every element is a mail.
+each message is a dictionary. 
 
 
 

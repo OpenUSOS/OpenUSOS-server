@@ -26,8 +26,23 @@ class Emails():
         except:
             return 'N'
 
-    def display(self):
-        raise NotImplementedError
+    def get_emails(self):
+        messages = []
+        #We get all messages send by the user:
+        messages = self.caller.api.get('services/mailclient/user', status='sent')
+        #lista dokladnych informacji:
+        lista = []
+        for message in messages:
+            element = {"id" : 1, "to" : 1, "subject": 1, "date": 1, "content":1}
+            details = self.caller.api.get('services/mailclient/message', message_id= message["id"], fields = "id|subject|content|date")
+            element["id"] = details["id"]
+            element["subject"] = details["subject"]
+            element["content"] = details["content"]
+            element["date"] = details["date"]
+            recepient_list = self.caller.api.get('services/mailclient/recipients', message_id= message["id"], fields = "email|user")
+            element["to"] = recepient_list
+            lista.append(element)
+        return lista
 
 
 
