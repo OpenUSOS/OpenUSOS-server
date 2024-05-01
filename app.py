@@ -82,7 +82,29 @@ mail:
 email adress given in [recepient], with subject given in [subject], and content given in [content].
 returns 'Y' if message was send sucessfully, and 'N' if not.
 6. id, query1 = get_emails ---- returns a list of mails send by user, where every element is a mail.
-each message is a dictionary. 
+each element is a dict with: "id" : unique message id, "subject", "content", "date", 
+and "to" - a list with two dicts:[ "email" - email of the recepient (or null), 
+"user" - dict with information of the recepient: "first_name", "id", "last_name"]
+
+example:
+    {
+        "content": "To jest test",
+        "date": "2024-03-03 00:08:32",
+        "id": "1780158",
+        "subject": "Test",
+        "to": [
+            {
+                "email": "oskar.kulinski@student.uj.edu.pl",
+                "user": {
+                    "first_name": "Oskar",
+                    "id": "696969",
+                    "last_name": "Kuliński"
+                }
+            }
+        ]
+    }
+
+    
 
 
 
