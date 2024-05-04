@@ -1,4 +1,5 @@
 import os
+import json
 
 class Usersession():
 
@@ -21,7 +22,9 @@ class Usersession():
                 return 'N'
             else:
                 AT, ATS = self.caller.api.get_access_data()
-                return {'AT': AT, "ATS": ATS}
+                mydict = {'AT': AT, "ATS": ATS}
+                json_string = json.dumps(mydict)
+                return json_string
         except:
             return 'N'
 

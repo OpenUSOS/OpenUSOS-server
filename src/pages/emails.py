@@ -1,5 +1,5 @@
 import os
-
+import json
 
 class Emails():
 
@@ -42,7 +42,8 @@ class Emails():
             recepient_list = self.caller.api.get('services/mailclient/recipients', message_id= message["id"], fields = "email|user")
             element["to"] = recepient_list
             lista.append(element)
-        return lista
+        json_string = json.dumps(lista)
+        return json_string
 
 
 

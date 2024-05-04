@@ -1,10 +1,12 @@
 from flask import Flask, request
 import uuid
 import json
+import asyncio
 
 from src.usosapi import USOSAPIConnection
 from src.usersession import Usersession
 from src.pages.emails import Emails
+from src.pages.grades import Grades
 
 Usosapi_base_url = 'https://apps.usos.uj.edu.pl/'
 
@@ -20,6 +22,8 @@ class Caller:
         self.api = USOSAPIConnection(Usosapi_base_url, Consumer_key, Consumer_secret)
         self.connector = Usersession(self) #Logging in/out
         self.email = Emails(self) #Email
+        self.grades = Grades(self) #Grades
+
     
     def test(self):
         print("lalalalallalala")
@@ -34,6 +38,8 @@ def handle_one_argument(arg1, used_caller):
         return used_caller.connector.log_out()
     elif arg1 == 'get_emails':
         return used_caller.email.get_emails()
+    elif arg1 == 'get_grades':
+        return used_caller.grades.get_grades()
     else:
         return 'Not a valid call, check the spelling or contact me.'
 
@@ -114,7 +120,7 @@ example:
 
 #It has to be in one function, since it gets called everytime GET is made:
 @app.route('/api', methods = ['GET'])
-def call():
+async def call():
     #These can be empty:
     id = request.args.get('id')
     query1 = request.args.get('query1', None)
@@ -155,7 +161,7 @@ def generate_unique_id():
 
 
 @app.route('/login', methods=['GET'])
-def login():
+async def login():
     # We create a unique id that the user will use:
     user_id = generate_unique_id()
     caller_instances[user_id] = Caller(user_id)  # Initialize Caller instance with user_id
@@ -164,6 +170,4 @@ def login():
 if __name__ == "__main__":
     app.run(host='0.0.0.0' , port=5000)
 
-AT = "TK5vpMTqaG6HdJjbt6nC"
-ATS = "MPsAmM5A2zpA8uvPET3GDQvn7Hzr3uYAHwrnVjGq"
-testowe = Caller(69)
+#{"AT": "TK5vpMTqaG6HdJjbt6nC", "ATS": "MPsAmM5A2zpA8uvPET3GDQvn7Hzr3uYAHwrnVjGq"}

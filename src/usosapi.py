@@ -23,7 +23,7 @@ _ACCESS_TOKEN_SUFFIX = 'services/oauth/access_token'
 # We can change it to get access to more permissions from user. In fact, we should, to
 # get permission to register for courses/exams, or send emails.
 # Probably good to just hardcode them here, for example:
-SCOPES = "offline_access|student_exams|email|mailclient|studies"
+SCOPES = "offline_access|student_exams|email|mailclient|studies|grades"
 # scopes are seperated with '|' (thanks for nothing documentation) 
 _LOGGER = logging.getLogger('USOSAPI')
 
