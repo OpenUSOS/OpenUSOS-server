@@ -7,6 +7,7 @@ from src.usosapi import USOSAPIConnection
 from src.usersession import Usersession
 from src.pages.emails import Emails
 from src.pages.grades import Grades
+from src.pages.schedule import Schedule
 
 Usosapi_base_url = 'https://apps.usos.uj.edu.pl/'
 
@@ -23,6 +24,7 @@ class Caller:
         self.connector = Usersession(self) #Logging in/out
         self.email = Emails(self) #Email
         self.grades = Grades(self) #Grades
+        self.schedule = Schedule(self)
 
     
     def test(self):
@@ -55,6 +57,8 @@ def handle_two_arguments(arg1, arg2, used_caller):
 def handle_three_arguments(arg1, arg2, arg3, used_caller):
     if arg1 == 'resume':
         return used_caller.connector.resume(arg2, arg3)
+    elif arg1 == 'get_schedule':
+        return used_caller.schedule.get_schedule(arg2, arg3)
     else:
         return 'Not a valid call, check the spelling or contact me.'
     
@@ -114,8 +118,12 @@ grades:
 ---------
 7. id, query1 = get_grades ---- returns a list, containing dicts with details of grades: "date", "author",
 "value", "name" (the name of a course, like 'Metody numeryczne'), "term".
-
-
+---------
+schedule:
+---------
+8. id, query1 = get_schedule, query2 = [start_date], query3 = [num_of_days] ---- returns a list of dicts,
+with activities starting from [start date] (%Y-%m-%d format), including num_of_days days.
+each activity contains: {"start_time", "end_time", "name" : {"pl", "en"}, "building_name", "room_number"}
 
 """
 
@@ -172,4 +180,4 @@ async def login():
 if __name__ == "__main__":
     app.run(host='0.0.0.0' , port=5000)
 
-#{"AT": "TK5vpMTqaG6HdJjbt6nC", "ATS": "MPsAmM5A2zpA8uvPET3GDQvn7Hzr3uYAHwrnVjGq"}
+#{"AT": "YVy5wT7gXJJrTs3QMq25", "ATS": "uvBDbNCQzbEAyVFj6emnKvSTGSxKnVqxgYRMn2Ba"}
