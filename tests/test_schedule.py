@@ -1,81 +1,45 @@
 import sys
 from pathlib import Path
 import unittest
-import flet as ft
 from unittest.mock import patch
+import json
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
-
 from src.usosapi import USOSAPIConnection
-from setup import App
-from src.pages.schedule import Schedule
 
 
-class TestSchedule(unittest.TestCase):
+from app import Caller
+
+AT = 'YVy5wT7gXJJrTs3QMq25'
+ATS = 'uvBDbNCQzbEAyVFj6emnKvSTGSxKnVqxgYRMn2Ba'
+
+class TestUsersession(unittest.TestCase):
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.connect_app()
 
     @classmethod
     def connect_app(cls):
-        cls._app = None
-        cls._page = None
+        cls.caller = Caller(123)
 
-    def test_display(self):
-        schedule = Schedule(self._app, self._page)
-        displayed = schedule.display()
-        self.assertIsInstance(displayed, ft.View)
-
-    def test_get_data(self):
-        with patch.object(USOSAPIConnection, 'get') as mock_get:  # TODO needs changing
-            to_return = [{
-                "start_time": "2024-04-25 10:15:00",
-                "end_time": "2024-04-25 11:45:00",
-                "name": {
-                    "pl": "Rachunek prawdopodobieństwa i statystyka - Wykład",
-                    "en": "Probability and Statistics - Lecture"
-                }
-            },
-                {
-                    "start_time": "2024-04-25 11:30:00",
-                    "end_time": "2024-04-25 13:00:00",
-                    "name": {
-                        "pl": "Język hiszpański - B1 - 30 godzin/2 semestr - Lektorat",
-                        "en": "Spanish Interfaculty Group - Foreign language class"
-                    }
-                }]
-            mock_get.return_value = to_return
-
-            schedule = Schedule(self._app, self._page)
-            value = schedule.get_data()
-            self.assertIsInstance(value, list)  # is value a list
-            self.assertListEqual(value, to_return)  # is value the right list
-            self.assertEqual(value, schedule.data)  # is value the same as grades.data (was data initialized properly)
-
-    def test_display_buttons(self):
-        schedule = Schedule(self._app, self._page)
-        displayed = schedule.display()
-        control_list = [displayed.controls]
-        while len(control_list) > 0:
-            current_control = control_list.pop()
-            control_list.extend(current_control.controls)
-            if (isinstance(current_control, ft.ElevatedButton) or isinstance(current_control, ft.FloatingActionButton)
-                    or isinstance(current_control, ft.TextButton) or isinstance(current_control, ft.IconButton)
-                    or isinstance(current_control, ft.PopupMenuButton) or isinstance(current_control, ft.OutlinedButton)
-                    or isinstance(current_control, ft.CupertinoButton)):
-                self.assertFalse(current_control.on_click is None)
-                self.assertTrue(callable(current_control.on_click))
+    def test_get_schedule(self):
+        self.caller.connector.resume(AT, ATS)
+        with patch.object(USOSAPIConnection, 'get') as mock_get:
+            mock_get.return_value = {[{"start_time" : '1987-01-01-21:37:00', "end_time" : "1987-01-01-22:37:00", "name" : "nie"}]}
+            data = self.caller.schedule.get_schedule("1987-01-01", 2)
+            print(data)
+            list = json.loads(data)
 
 
-def run_tests(app: App, page: ft.Page):
-    TestSchedule._app = app
-    TestSchedule._page = page
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestSchedule)
+def run_tests(caller: Caller):
+    TestUsersession.caller = caller
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestUsersession)
     unittest.TextTestRunner().run(suite)
 
+def main():
+    caller = Caller(1)
+    run_tests(caller)
 
-def main(page: ft.Page):
-    app = App(page)
 
-
-ft.app(target=main)
+main()

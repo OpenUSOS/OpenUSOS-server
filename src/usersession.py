@@ -35,3 +35,13 @@ class Usersession():
     def log_out(self):
         self.caller.api.logout() #invalidate the token.
         return 'Access tokens invalidated!'
+    
+    def user_info(self):
+        data = self.caller.api.get('services/users/user', fields='first_name|last_name|email|photo_urls[200x200]')
+        info = {}
+        info["first_name"] = data["first_name"]
+        info["last_name"] = data["last_name"]
+        info["photo_url"] = data["photo_urls"]
+        info["email"] = data["email"]
+        json_string = json.dumps(info)
+        return json_string

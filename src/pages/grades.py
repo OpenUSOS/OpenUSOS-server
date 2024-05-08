@@ -11,7 +11,7 @@ class Grades():
         ids = self.caller.api.get('services/grades/latest', days = 9999, fields='exam_id|exam_session_number')
         for id in ids:
             all = self.caller.api.get('services/grades/grade', exam_id = id["exam_id"], exam_session_number = id["exam_session_number"],
-                                        fields='date_modified|modification_author|value_symbol|course_edition')
+                                        fields='date_modified|modification_author|value_symbol|course_edition[course_name|term_id]')
             grade = {}
             grade["date"] = all["date_modified"] #grade date
             grade["author"] = all["modification_author"] #grade author

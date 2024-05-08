@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 import unittest
 from unittest.mock import patch
+import json
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
@@ -25,9 +26,10 @@ class TestUsersession(unittest.TestCase):
         url = self.caller.connector.url()
         print(url)
         PIN = input("What is the PIN?")
-        dict = self.caller.connector.log_in(PIN)
-        AT = dict['AT']
-        ATS = dict['ATS']
+        data = self.caller.connector.log_in(PIN)
+        decoded = json.loads(data)
+        AT = decoded['AT']
+        ATS = decoded['ATS']
         self.assertTrue(self.caller.api.is_authorized())
 
     def test_logout(self):
