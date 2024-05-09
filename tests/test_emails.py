@@ -1,83 +1,50 @@
 import sys
 from pathlib import Path
 import unittest
-import flet as ft
 from unittest.mock import patch
+import json
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
-
 from src.usosapi import USOSAPIConnection
-from setup import App
-from src.pages.emails import Emails
 
 
-class TestEmails(unittest.TestCase):
+from app import Caller
+
+AT = 'YVy5wT7gXJJrTs3QMq25'
+ATS = 'uvBDbNCQzbEAyVFj6emnKvSTGSxKnVqxgYRMn2Ba'
+
+class TestUsersession(unittest.TestCase):
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.connect_app()
 
     @classmethod
     def connect_app(cls):
-        cls._app = None
-        cls._page = None
+        cls.caller = Caller(123)
 
-    def test_get_data(self):
-        with patch.object(USOSAPIConnection, 'get') as mock_get:
-            mock_get.return_value = ["aa", "bb", "cc"]
-
-            sender = Emails(self._app, self._page)
-            value = sender.get_data()
-            self.assertIsInstance(value,  list) # is value a list
-            self.assertListEqual(value, ["aa", "bb", "cc"]) # is value the right list
-            self.assertEqual(value, sender.data) # is value the same as sender.data (was data initialized properly)
-
-    def test_display_buttons(self):
-        sender = Emails(self._app, self._page)
-        displayed = sender.display()
-        control_list = [displayed.controls]
-        while len(control_list) > 0:
-            current_control = control_list.pop()
-            control_list.extend(current_control.controls)
-            if (isinstance(current_control, ft.ElevatedButton) or isinstance(current_control, ft.FloatingActionButton)
-                or isinstance(current_control, ft.TextButton) or isinstance(current_control, ft.IconButton)
-                or isinstance(current_control, ft.PopupMenuButton) or isinstance(current_control, ft.OutlinedButton)
-                or isinstance(current_control, ft.CupertinoButton)):
-                self.assertFalse(current_control.on_click is None)
-                self.assertTrue(callable(current_control.on_click))
-    
-    def test_display_send(self):
-        sender = Emails(self._app, self._page)
-        displayed = sender.display()
-        self.assertIsInstance(displayed, ft.View)
+    def test_get_email(self):
+        self.caller.connector.resume(AT, ATS)
+        data = self.caller.email.get_emails()
+        #print(data)
+        lista = json.loads(data)
+        if {"id": "1780158", "to": [{"email": "oskar.kulinski@student.uj.edu.pl", "user": None}],
+             "subject": "Test", "date": "2024-03-03 00:08:32", "content": "To jest test"} in lista:
+            pass
+        else:
+            self.assertTrue(1 == 2)
+        
+            
 
 
-    def test_send_email(self):
-        with patch.object(USOSAPIConnection, 'get') as mock_get:
-            def side_effect(*args, **kwargs):
-                if args and args[0] == 'services/mailclient/send_message': #if we are sending the message
-                    #test if message was send correctly, directory should be empty
-                    self.assertDictEqual(original_get(*args, *kwargs), {})
-                    return original_get(*args, **kwargs)
-                else: #else return the original get value, so that function works properly
-                    return original_get(*args, **kwargs)
-                
-            mock_get.side_effect = side_effect  #assign the side effect.
-            original_get = USOSAPIConnection.get #original get function    
-
-            sender = Emails(self._app, self._page) 
-            sender.send_email() #We are testing this
-
-
-def run_tests(app: App, page: ft.Page):
-    Emails._app = app
-    Emails._page = page
-    suite = unittest.TestLoader().loadTestsFromTestCase(Emails)
+def run_tests(caller: Caller):
+    TestUsersession.caller = caller
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestUsersession)
     unittest.TextTestRunner().run(suite)
 
+def main():
+    caller = Caller(1)
+    run_tests(caller)
 
-def main(page: ft.Page):
-    app = App(page)
 
-
-if __name__ == "__main__":
-    ft.app(target=main)
+main()

@@ -1,66 +1,49 @@
 import sys
 from pathlib import Path
 import unittest
-import flet as ft
 from unittest.mock import patch
+import json
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
-
 from src.usosapi import USOSAPIConnection
-from src.pages.grades import Grades
 
 
-class TestGrades(unittest.TestCase):
+from app import Caller
+
+AT = 'YVy5wT7gXJJrTs3QMq25'
+ATS = 'uvBDbNCQzbEAyVFj6emnKvSTGSxKnVqxgYRMn2Ba'
+
+class TestUsersession(unittest.TestCase):
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.connect_app()
 
     @classmethod
     def connect_app(cls):
-        cls._app = None
-        cls._page = None
+        cls.caller = Caller(123)
 
-    def test_display(self):
-        grades = Grades(self._app, self._page)
-        displayed = grades.display()
-        self.assertIsInstance(displayed, ft.View)
-
-    def test_get_data(self):
-        with patch.object(USOSAPIConnection, 'get') as mock_get:
-            mock_get.return_value = {'22/23': {}, '23/24': {}}
-
-            grades = Grades(self._app, self._page)
-            value = grades.get_data()
-            self.assertIsInstance(value,  dict) # is value a dict
-            self.assertDictEqual(value, {'22/23': {}, '23/24': {}}) # is value the right dict
-            self.assertEqual(value, grades.data) # is value the same as grades.data (was data initialized properly)
-
-    def test_display_buttons(self):
-        grades = Grades(self._app, self._page)
-        displayed = grades.display()
-        control_list = [displayed.controls]
-        while len(control_list) > 0:
-            current_control = control_list.pop()
-            control_list.extend(current_control.controls)
-            if (isinstance(current_control, ft.ElevatedButton) or isinstance(current_control, ft.FloatingActionButton)
-                or isinstance(current_control, ft.TextButton) or isinstance(current_control, ft.IconButton)
-                or isinstance(current_control, ft.PopupMenuButton) or isinstance(current_control, ft.OutlinedButton)
-                or isinstance(current_control, ft.CupertinoButton)):
-                self.assertFalse(current_control.on_click is None)
-                self.assertTrue(callable(current_control.on_click))
+    def test_get_grades(self):
+        self.caller.connector.resume(AT, ATS)
+        data = self.caller.grades.get_grades()
+        #print(data)
+        lista = json.loads(data)
+        if {"date": "2024-02-01-22:22", "author": {"id": "54", "first_name" : "Anna", "last_name": "Ochal"}, "value" : "4.5",
+            "name": "Analiza matematyczna 2", "type": "WYK"} in lista:
+            pass
+        else:
+            self.assertTrue(1 == 2)
+            
 
 
-def run_tests(app: App, page: ft.Page):
-    TestGrades._app = app
-    TestGrades._page = page
-    suite = unittest.TestLoader().loadTestsFromTestCase(TestGrades)
+def run_tests(caller: Caller):
+    TestUsersession.caller = caller
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestUsersession)
     unittest.TextTestRunner().run(suite)
 
+def main():
+    caller = Caller(1)
+    run_tests(caller)
 
-def main(page: ft.Page):
-    app = App(page)
-    run_tests(app, app.page)
 
-
-ft.app(target=main)
-
+main()

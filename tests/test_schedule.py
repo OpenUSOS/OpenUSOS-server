@@ -26,10 +26,15 @@ class TestUsersession(unittest.TestCase):
     def test_get_schedule(self):
         self.caller.connector.resume(AT, ATS)
         with patch.object(USOSAPIConnection, 'get') as mock_get:
-            mock_get.return_value = {[{"start_time" : '1987-01-01-21:37:00', "end_time" : "1987-01-01-22:37:00", "name" : "nie"}]}
+            testowa = [{"start_time" : '1987-01-01-21:37:00', "end_time" : "1987-01-01-22:37:00", "name" : "nie", "building_name" : "pieklo", "room_number" : "69"},
+                        {"start_time" : '1984-01-01-21:37:00', "end_time" : "1984-01-01-22:37:00", "name" : "tak", "building_name" : "pieklo2", "room_number" : "420"}]
+            mock_get.return_value = testowa
             data = self.caller.schedule.get_schedule("1987-01-01", 2)
-            print(data)
-            list = json.loads(data)
+            #print(data)
+            lista = json.loads(data)
+            self.assertIsInstance(lista, list)
+            self.assertEqual(testowa, lista)
+            
 
 
 def run_tests(caller: Caller):
