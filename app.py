@@ -119,7 +119,7 @@ example:
 grades:
 ---------
 7. id, query1 = get_grades ---- returns a list, containing dicts with details of grades: "date", "author",
-"value", "name" (the name of a course, like 'Metody numeryczne'), "term".
+"value", "name" (the name of a course, like 'Metody numeryczne'), "term", "class_type" (WYK, LAB).
 ---------
 schedule:
 ---------
@@ -185,4 +185,4 @@ async def login():
 if __name__ == "__main__":
     app.run(host='0.0.0.0' , port=5000)
 
-#{"AT": "YVy5wT7gXJJrTs3QMq25", "ATS": "uvBDbNCQzbEAyVFj6emnKvSTGSxKnVqxgYRMn2Ba"}
+#{"AT": "2EMVucYHeKGXfMMfv4dz", "ATS": "GYycKepRbXvVRB59UTLZjeLjNvFKD9MQud58bCGw"}
