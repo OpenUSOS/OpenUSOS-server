@@ -44,6 +44,8 @@ def handle_one_argument(arg1, used_caller):
         return used_caller.email.get_emails()
     elif arg1 == 'get_grades':
         return used_caller.grades.get_grades()
+    elif arg1 == 'get_tests':
+        return used_caller.grades.get_tests()
     else:
         return 'Not a valid call, check the spelling or contact me.'
 

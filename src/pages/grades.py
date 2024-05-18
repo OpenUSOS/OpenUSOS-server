@@ -33,8 +33,39 @@ class Grades():
         return json_string
 
 
-    def display(self):
-        raise NotImplementedError
+    def get_tests(self):
+        lista = []
+        answ = self.caller.api.get('services/crstests/participant')
+        for specific_term in answ["tests"]:
+            term = {} #One specific term, eg 22/23 Z
+            term["term_id"] = specific_term
+            term["courses"] = [] #courses happening in a term
+            for root_id in answ["tests"][specific_term]:
+                course = {} #one specific course, eg ASD
+                course["name"] = answ["tests"][specific_term][root_id]["course_edition"]["course_name"] #the name of a course
+                course["tests"] = [] #The tests in a course, like activity or kolos
+                course_tests = self.caller.api.get('services/crstests/node2', node_id = root_id, fields = 'subnodes[id|name|description]')
+                for course_test in course_tests["subnodes"]:
+                    test = {} # a specific test.
+                    test["name"] = course_test["name"] #name of a test
+                    test["description"] = course_test["description"]
+                    test_points = self.caller.api.get('services/crstests/task_node_details', id = course_test["id"], fields='students_points') 
+                    przenos = {}
+                    przenos = test_points
+                    test["points"] = przenos["students_points"]["points"]
+                    test["exercises"] = [] #list of all exercises, eg. a task in a test.
+                    test_exercieses = self.caller.api.get('services/crstests/node2', node_id = course_test["id"], fields = 'subnodes[id|name|description]')
+                    for test_exercise in test_exercieses["subnodes"]:
+                        exercise = {}
+                        exercise["name"] = test_exercise["name"]
+                        exercise["description"] = test_exercise["description"]
+                        exercise_points = self.caller.api.get('services/crstests/task_node_details', id = test_exercise["id"], fields='students_points')
+                        exercise["points"] = exercise_points #points
+                        test["exercises"].append(exercise)
+                    course["tests"].append(test)
+                term["courses"].append(course) 
+            lista.append(term)
+        return lista
 
 
 
