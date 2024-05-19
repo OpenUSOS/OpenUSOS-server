@@ -22,7 +22,9 @@ class Grades():
                     try:
                         grade["author"] = info["grades"]["course_units_grades"][str(group["course_unit_id"])][str(group["group_number"])]["modification_author"]
                     except:
-                        grade["author"] = "-"
+                        grade["author"]["first_name"] = "-"
+                        grade["author"]["last_name"] = "-"
+                        grade["author"]["id"] = "-"
                     
                     try:
                         grade["date"] = str(info["grades"]["course_units_grades"][str(group["course_unit_id"])][str(group["group_number"])]["date_modified"])
@@ -34,7 +36,9 @@ class Grades():
                         grade["value"] = "-"
 
                     if(grade["author"] is None):
-                        grade["author"] = "-"
+                        grade["author"]["first_name"] = "-"
+                        grade["author"]["last_name"] = "-"
+                        grade["author"]["id"] = "-"
                     if(grade["date"] is None):
                         grade["date"] = "-"
                     if(grade["value"] is None):
