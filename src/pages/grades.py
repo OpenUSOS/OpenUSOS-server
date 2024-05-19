@@ -18,13 +18,15 @@ class Grades():
             grade["value"] = all["value_symbol"] #grade value
 
             #I need the type of the group:
-            unitid = all["unit"]["id"]
-            unitstuff = self.caller.api.get('services/courses/unit', unit_id = unitid, fields='groups[class_type_id]')
-            grade["class_type"] = unitstuff["groups"][0]["class_type_id"] #doesn't matter which, really (I hope)
-            #course to get the name of the course
+            if(all["unit"]):
+                unitid = all["unit"]["id"]
+                unitstuff = self.caller.api.get('services/courses/unit', unit_id = unitid, fields='groups[class_type_id]')
+                grade["class_type"] = unitstuff["groups"][0]["class_type_id"] #doesn't matter which, really (I hope)
+                #course to get the name of the course
+            else:
+                grade["class_type"] = "-"
             course = all["course_edition"]
             names = course["course_name"]
-
             grade["name"] = names["pl"] #grade course name
             grade["term"] = course["term_id"] #grade term
 
