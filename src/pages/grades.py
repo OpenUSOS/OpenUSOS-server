@@ -82,7 +82,7 @@ class Grades():
                 term["courses"].append(course) 
             lista.append(term)
         json_string = json.dumps(lista)
-        return lista
+        return json_string
 
 
 
