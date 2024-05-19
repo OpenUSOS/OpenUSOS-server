@@ -49,22 +49,39 @@ class Grades():
                     test = {} # a specific test.
                     test["name"] = course_test["name"] #name of a test
                     test["description"] = course_test["description"]
-                    test_points = self.caller.api.get('services/crstests/task_node_details', id = course_test["id"], fields='students_points') 
-                    przenos = {}
-                    przenos = test_points
-                    test["points"] = przenos["students_points"]["points"]
+                    test_points = self.caller.api.get('services/crstests/task_node_details', id = course_test["id"], fields='students_points|points_max')
+                    if(test_points):
+                        test["points"] = test_points["students_points"]["points"]
+                    else:
+                        test["points"] = None
+
+                    if(test_points):
+                        test["points_max"] = test_points["points_max"]
+                    else:
+                        test["points_max"] = None
+
                     test["exercises"] = [] #list of all exercises, eg. a task in a test.
                     test_exercieses = self.caller.api.get('services/crstests/node2', node_id = course_test["id"], fields = 'subnodes[id|name|description]')
                     for test_exercise in test_exercieses["subnodes"]:
                         exercise = {}
                         exercise["name"] = test_exercise["name"]
                         exercise["description"] = test_exercise["description"]
-                        exercise_points = self.caller.api.get('services/crstests/task_node_details', id = test_exercise["id"], fields='students_points')
-                        exercise["points"] = exercise_points #points
+                        exercise_points = self.caller.api.get('services/crstests/task_node_details', id = test_exercise["id"], fields='students_points|points_max')
+                        if(exercise_points):
+                            exercise["points"] = exercise_points["students_points"]["points"]
+                        else:
+                            exercise["points"] = None
+                            
+                        if(exercise_points):
+                            exercise["points_max"] = exercise_points["points_max"]
+                        else:
+                            exercise["max_points"] = None
+                        
                         test["exercises"].append(exercise)
                     course["tests"].append(test)
                 term["courses"].append(course) 
             lista.append(term)
+        json_string = json.dumps(lista)
         return lista
 
 
