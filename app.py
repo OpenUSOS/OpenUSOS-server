@@ -12,8 +12,8 @@ from src.pages.schedule import Schedule
 Usosapi_base_url = 'https://apps.usos.uj.edu.pl/'
 
 # Consumer Key to use.
-Consumer_key = '748apdbMm3Ggh6KGXMyp'
-Consumer_secret = 'Y33JYY3vgjNym6aFP5qnxcMtE7WrejLt8VDjWS87'
+Consumer_key = 'RNXRJwsj3q9DHdTXVQUY'
+Consumer_secret = 'dnPEfEWHRrQwY2bEdBrXSJWrEuHn3eQvd2TgBMQs'
 
 #One caller object is associated with one session, one user, and one id.
 class Caller:
