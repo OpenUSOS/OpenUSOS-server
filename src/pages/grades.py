@@ -31,6 +31,7 @@ class Grades():
             grade["term"] = course["term_id"] #grade term
 
             lista.append(grade)
+        print(lista)
         json_string = json.dumps(lista)
         return json_string
 
