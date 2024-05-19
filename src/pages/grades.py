@@ -16,7 +16,7 @@ class Grades():
                                     fields='course_name|term_id|user_groups[class_type_id|course_unit_id|group_number]|grades[value_symbol|date_modified|modification_author]')
                 for group in info["user_groups"]:
                     grade = {}
-                    grade["term"] = course["term_id"]
+                    grade["term"] = str(course["term_id"])
                     grade["class_type"] = group["class_type_id"]
                     grade["name"] = info["course_name"]["pl"]
                     try:
@@ -25,11 +25,11 @@ class Grades():
                         grade["author"] = "-"
                     
                     try:
-                        grade["date"] = info["grades"]["course_units_grades"][str(group["course_unit_id"])][str(group["group_number"])]["date_modified"]
+                        grade["date"] = str(info["grades"]["course_units_grades"][str(group["course_unit_id"])][str(group["group_number"])]["date_modified"])
                     except:
                         grade["date"] = "-"
                     try:
-                        grade["value"] = info["grades"]["course_units_grades"][str(group["course_unit_id"])][str(group["group_number"])]["value_symbol"]
+                        grade["value"] = str(info["grades"]["course_units_grades"][str(group["course_unit_id"])][str(group["group_number"])]["value_symbol"])
                     except:
                         grade["value"] = "-"
 
