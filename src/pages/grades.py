@@ -43,7 +43,7 @@ class Grades():
                     lista.append(grade)
 
         json_string = json.dumps(lista)
-        return lista
+        return json_string
 
 
     def get_tests(self):
