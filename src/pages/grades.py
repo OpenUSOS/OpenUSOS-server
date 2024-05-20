@@ -14,12 +14,12 @@ class Grades():
             for course in courses_in_term:
                 info = self.caller.api.get('services/courses/course_edition' ,course_id = course["course_id"], term_id = course["term_id"],
                                     fields='course_name|term_id|grades[value_symbol|date_modified|modification_author]')
-                grade = {}
-                grade["term"] = str(course["term_id"])
-                grade["name"] = info["course_name"]["pl"]
                     
                 for grade_unit_id in info["grades"]["course_units_grades"]:
                     for exam_session in info["grades"]["course_units_grades"][grade_unit_id]:
+                        grade = {}
+                        grade["term"] = str(course["term_id"])
+                        grade["name"] = info["course_name"]["pl"]
                         grade["author"] = info["grades"]["course_units_grades"][grade_unit_id][exam_session]["modification_author"]
                         if(grade["author"] is None):
                             grade["author"] = {}
@@ -34,11 +34,12 @@ class Grades():
                             grade["date"] = "-"
 
                         try:
-                            group = self.caller.api.get('services/groups/group', course_unit_id = grade_unit_id, group_number=1, fields='class_type')
-                            grade["class_type"] = group["class_type"]
+                            group = self.caller.api.get('services/groups/group', course_unit_id = grade_unit_id, group_number=1, fields='class_type_id')
+                            grade["class_type"] = group["class_type_id"]
                         except:
                             grade["class_type"] = "WYK"
-
+                        
+                        print(grade)
                         lista.append(grade)
 
         json_string = json.dumps(lista)
