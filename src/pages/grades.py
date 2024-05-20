@@ -21,8 +21,17 @@ class Grades():
                 for grade_unit_id in info["grades"]["course_units_grades"]:
                     for exam_session in info["grades"]["course_units_grades"][grade_unit_id]:
                         grade["author"] = info["grades"]["course_units_grades"][grade_unit_id][exam_session]["modification_author"]
+                        if(grade["author"] is None):
+                            grade["author"] = {}
+                            grade["author"]["first_name"] = "-"
+                            grade["author"]["last_name"] = "-"
+                            grade["author"]["id"] = "-"
                         grade["value"] = info["grades"]["course_units_grades"][grade_unit_id][exam_session]["value_symbol"]
+                        if(grade["value"] is None):
+                            grade["value"] = "-"
                         grade["date"] = info["grades"]["course_units_grades"][grade_unit_id][exam_session]["date_modified"]
+                        if(grade["date"] is None):
+                            grade["date"] = "-"
 
                         try:
                             group = self.caller.api.get('services/groups/group', course_unit_id = grade_unit_id, group_number=1, fields='class_type')
