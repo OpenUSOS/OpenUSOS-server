@@ -8,48 +8,32 @@ class Grades():
 
     def get_grades(self):
         lista = []
-        courses = self.caller.api.get('services/courses/user',  fields='course_editions[course_id|term_id]')
+        courses = self.caller.api.get('services/courses/user',  fields='course_editions[course_id|term_id]', active_terms_only = 'false')
         for term in courses["course_editions"]:
             courses_in_term = courses["course_editions"][term]
             for course in courses_in_term:
                 info = self.caller.api.get('services/courses/course_edition' ,course_id = course["course_id"], term_id = course["term_id"],
-                                    fields='course_name|term_id|user_groups[class_type_id|course_unit_id|group_number]|grades[value_symbol|date_modified|modification_author]')
-                for group in info["user_groups"]:
-                    grade = {}
-                    grade["term"] = str(course["term_id"])
-                    grade["class_type"] = group["class_type_id"]
-                    grade["name"] = info["course_name"]["pl"]
-                    try:
-                        grade["author"] = info["grades"]["course_units_grades"][str(group["course_unit_id"])][str(group["group_number"])]["modification_author"]
-                    except:
-                        grade["author"] = {}
-                        grade["author"]["first_name"] = "-"
-                        grade["author"]["last_name"] = "-"
-                        grade["author"]["id"] = "-"
+                                    fields='course_name|term_id|grades[value_symbol|date_modified|modification_author]')
+                grade = {}
+                grade["term"] = str(course["term_id"])
+                grade["name"] = info["course_name"]["pl"]
                     
-                    try:
-                        grade["date"] = str(info["grades"]["course_units_grades"][str(group["course_unit_id"])][str(group["group_number"])]["date_modified"])
-                    except:
-                        grade["date"] = "-"
-                    try:
-                        grade["value"] = str(info["grades"]["course_units_grades"][str(group["course_unit_id"])][str(group["group_number"])]["value_symbol"])
-                    except:
-                        grade["value"] = "-"
+                for grade_unit_id in info["grades"]["course_units_grades"]:
+                    for exam_session in info["grades"]["course_units_grades"][grade_unit_id]:
+                        grade["author"] = info["grades"]["course_units_grades"][grade_unit_id][exam_session]["modification_author"]
+                        grade["value"] = info["grades"]["course_units_grades"][grade_unit_id][exam_session]["value_symbol"]
+                        grade["date"] = info["grades"]["course_units_grades"][grade_unit_id][exam_session]["date_modified"]
 
-                    if(grade["author"] is None):
-                        grade["author"] = {}
-                        grade["author"]["first_name"] = "-"
-                        grade["author"]["last_name"] = "-"
-                        grade["author"]["id"] = "-"
-                    if(grade["date"] is None):
-                        grade["date"] = "-"
-                    if(grade["value"] is None):
-                        grade["value"] = "-"
+                        try:
+                            group = self.caller.api.get('services/groups/group', course_unit_id = grade_unit_id, group_number=1, fields='class_type')
+                            grade["class_type"] = group["class_type"]
+                        except:
+                            grade["class_type"] = "WYK"
 
-                    lista.append(grade)
+                        lista.append(grade)
 
         json_string = json.dumps(lista)
-        return json_string
+        return lista
 
 
     def get_tests(self):
