@@ -3,24 +3,21 @@ import uuid
 import json
 import asyncio
 
+from tokeny.OpenUSOS_data import tokens
+
 from src.usosapi import USOSAPIConnection
 from src.usersession import Usersession
 from src.pages.emails import Emails
 from src.pages.grades import Grades
 from src.pages.schedule import Schedule
 
-Usosapi_base_url = 'https://apps.usos.uj.edu.pl/'
-
-# Consumer Key to use.
-Consumer_key = 'RNXRJwsj3q9DHdTXVQUY'
-Consumer_secret = 'dnPEfEWHRrQwY2bEdBrXSJWrEuHn3eQvd2TgBMQs'
 
 #One caller object is associated with one session, one user, and one id.
 class Caller:
 
-    def __init__(self, user_id):
+    def __init__(self, user_id, CK, CS, url):
         self.user_id = user_id  #Each caller is linked to one user.
-        self.api = USOSAPIConnection(Usosapi_base_url, Consumer_key, Consumer_secret)
+        self.api = USOSAPIConnection(url, CK, CS)
         self.connector = Usersession(self) #Logging in/out
         self.email = Emails(self) #Email
         self.grades = Grades(self) #Grades
@@ -187,9 +184,18 @@ def generate_unique_id():
 
 @app.route('/login', methods=['GET'])
 async def login():
+    #We take the target url:
+    query1 = request.args.get('query1', None)
+    if(query1 is None):
+        return "University required"
+    if query1 not in tokens.university_token:
+        return "Not a valid uniersity, check the spelling or contact me"
+    
     # We create a unique id that the user will use:
     user_id = generate_unique_id()
-    caller_instances[user_id] = Caller(user_id)  # Initialize Caller instance with user_id
+    caller_instances[user_id] = Caller(user_id, tokens.university_token[query1]["Consumer_key"], 
+                                       tokens.university_token[query1]["Consumer_secret"], tokens.university_token[query1]["url"])
+    
     return user_id
 
 if __name__ == "__main__":
