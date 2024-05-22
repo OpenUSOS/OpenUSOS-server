@@ -10,6 +10,7 @@ from src.usersession import Usersession
 from src.pages.emails import Emails
 from src.pages.grades import Grades
 from src.pages.schedule import Schedule
+from src.pages.surveys import Surveys
 
 
 #One caller object is associated with one session, one user, and one id.
@@ -22,6 +23,8 @@ class Caller:
         self.email = Emails(self) #Email
         self.grades = Grades(self) #Grades
         self.schedule = Schedule(self)
+        self.surveys = Surveys(self)
+        
 
     
     def test(self):
@@ -43,6 +46,8 @@ def handle_one_argument(arg1, used_caller):
         return used_caller.grades.get_grades()
     elif arg1 == 'get_tests':
         return used_caller.grades.get_tests()
+    elif arg1 =='get_surveys':
+        return used_caller.surveys.get_surveys()
     else:
         return 'Not a valid call, check the spelling or contact me.'
 
@@ -136,6 +141,18 @@ tests:
 "courses" is a list of the courses that took place during the term. it contains "name" (eg. ASD, sieci) and "tests".
 "tests" is a list of all tests within one course. it contains "name", "description", "points" (of user) "points_max", and "exercises".
 "exercises is a list of all exercises within one test. it contains "name", "description", "points" (of user) and "points_max".
+---------
+surveys:
+---------
+11. id, query1 = get_surveys ----- returns a list of surveys. each one is a dict containing:
+name, id, start_date, end_date, questions. each question is a dict with: id, number, display_text_html, allow_comment,
+possible_answer. each possible anserw is a dict containing: id, display_text_html.
+
+12. id, query1 = anserw_survey, query2 = [id of a query you anserw], query3 = [anserw]. Anserws the specific query. anserw should
+be a JSON-formatted object, mapping question IDs to their answers, {"question1_id": {"answers": ["possible_answer1_id",
+"possible_answer2_id", ...], "comment": "comment or null"}, "question2_id": ...}
+Note, that all values of this objects are strings (because the IDs of possible answers are strings).
+If comment should be left empty or the question does not allow comments, null has be passed in comment field.
 
 """
 
@@ -202,4 +219,4 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0' , port=5000)
     #app.run(host='0.0.0.0' , port=20117)
 
-#{"AT": "guYU6Xn5Tc3HBuGGAvXv", "ATS": "XVJvXxpcH4pxttsLMgdbkxja549YyDMQW7NpEPzE"}
+#{"AT": "d9eXeL9HhqeVAZDuZfgg", "ATS": "nxYf59bgtVuqEwscubGNxsNaBf39pFugjdFRB4Gj"}
