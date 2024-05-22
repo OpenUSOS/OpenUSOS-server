@@ -65,6 +65,10 @@ def handle_three_arguments(arg1, arg2, arg3, used_caller):
         return used_caller.connector.resume(arg2, arg3)
     elif arg1 == 'get_schedule':
         return used_caller.schedule.get_schedule(arg2, arg3)
+    elif arg1 =='answer_survey':
+        return used_caller.surveys.answer_survey(arg2, arg3)
+    elif arg1 == 'get_events':
+        return used_caller.schedule.get_events(arg2, arg3)
     else:
         return 'Not a valid call, check the spelling or contact me.'
     
@@ -148,13 +152,20 @@ surveys:
 name, id, start_date, end_date, questions. each question is a dict with: id, number, display_text_html, allow_comment,
 possible_answer. each possible anserw is a dict containing: id, display_text_html.
 
-12. id, query1 = anserw_survey, query2 = [id of a query you anserw], query3 = [anserw]. Anserws the specific query. anserw should
+12. id, query1 = answer_survey, query2 = [id of a query you anserw], query3 = [anserw]. Anserws the specific survey. anserw should
 be a JSON-formatted object, mapping question IDs to their answers, {"question1_id": {"answers": ["possible_answer1_id",
 "possible_answer2_id", ...], "comment": "comment or null"}, "question2_id": ...}
 Note, that all values of this objects are strings (because the IDs of possible answers are strings).
 If comment should be left empty or the question does not allow comments, null has be passed in comment field.
+----------
+events:
+----------
+13. id, query1 = get_events, query2 = [from_date], query3 = [to_date], gets list of events begining from and ending at.
+each object in a list is a dict with "name" that has the name of a programme from which the event is, and "list"
+with the list of the events. each event has a name, start_date, end_date, type, is_day_off (telling if it's a day of).
 
 """
+
 
 
 #It has to be in one function, since it gets called everytime GET is made:

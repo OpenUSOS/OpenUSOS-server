@@ -42,6 +42,32 @@ class Schedule():
             date_from = (datetime.strptime(date_from, "%Y-%m-%d") + timedelta(days=days_to_fetch)).strftime("%Y-%m-%d")
         json_string = json.dumps(activities)
         return json_string
+    
+    def get_events(self, date_from, date_to):
+        returnedlist = []
+        
+        student_programmes = self.caller.api.get('services/progs/student', fields='programme[name|faculty[id]]',active_only = 'true', old_programs='false')
+        for student_programme in student_programmes:
+            obj = {}
+            obj["name"] = student_programme['programme']["name"]
+            joinedlist = []
+            def month_range(start_date, end_date):
+                current_date = start_date.replace(day=1)
+                while current_date <= end_date:
+                    next_month = (current_date.replace(day=28) + timedelta(days=4)).replace(day=1)
+                    yield current_date, min(end_date, next_month - timedelta(days=1))
+                    current_date = next_month
+            
+            start_date = datetime.strptime(date_from, "%Y-%m-%d")
+            end_date = datetime.strptime(date_to, "%Y-%m-%d")
+            
+            for start, end in month_range(start_date, end_date):
+                events = self.caller.api.get('services/calendar/search', faculty_id= student_programme['programme']["faculty"]["id"], start_date=start.strftime("%Y-%m-%d"), end_date=end.strftime("%Y-%m-%d"))
+                joinedlist.extend(events)
+            
+            obj["list"] = joinedlist
+            returnedlist.append(obj)
 
+        return returnedlist
 
 
