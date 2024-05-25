@@ -11,6 +11,7 @@ from src.pages.emails import Emails
 from src.pages.grades import Grades
 from src.pages.schedule import Schedule
 from src.pages.surveys import Surveys
+from src.pages.news import News
 
 
 #One caller object is associated with one session, one user, and one id.
@@ -24,6 +25,7 @@ class Caller:
         self.grades = Grades(self) #Grades
         self.schedule = Schedule(self)
         self.surveys = Surveys(self)
+        self.news = News(self)
         
 
     
@@ -75,6 +77,8 @@ def handle_three_arguments(arg1, arg2, arg3, used_caller):
 def handle_four_arguments(arg1, arg2, arg3, arg4, used_caller):
     if arg1 == 'send_email':
         return used_caller.email.send_email(arg2, arg3, arg4)
+    elif arg1 == 'get_news':
+        return used_caller.news.get_news(arg2, arg3, arg4)
     else:
         return 'Not a valid call, check the spelling or contact me.'
 
@@ -163,6 +167,16 @@ events:
 13. id, query1 = get_events, query2 = [from_date], query3 = [to_date], gets list of events begining from and ending at.
 each object in a list is a dict with "name" that has the name of a programme from which the event is, and "list"
 with the list of the events. each event has a name, start_date, end_date, type, is_day_off (telling if it's a day of).
+----------
+news:
+----------
+14. id, query1 = get_news, query2 = [from_date], query3 = [start], query4 = [num] (100 <)
+returns a dict with: 
+"next_page" - true if there are more items. 
+"total" - int showing how many items were matched
+"items" a list of items. each item has just one field, "article" 
+(kinda usless, but supposedly they can add more types of items in the future).
+each article contains: name, author, publication_date, title, headline_html, content_html.
 
 """
 
@@ -230,4 +244,4 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0' , port=5000)
     #app.run(host='0.0.0.0' , port=20117)
 
-#{"AT": "d9eXeL9HhqeVAZDuZfgg", "ATS": "nxYf59bgtVuqEwscubGNxsNaBf39pFugjdFRB4Gj"}
+#{"AT": "2yDqSfspnT3jtauhCtjH", "ATS": "7ZHE23cNvWtwRxFfctS5BQw5HC8tNru2DDKrfkaQ"}
