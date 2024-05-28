@@ -5,7 +5,7 @@ from unittest.mock import patch
 import json
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
-
+from tokeny.OpenUSOS_data.tokens import university_token
 
 from app import Caller
 
@@ -20,7 +20,7 @@ class TestUsersession(unittest.TestCase):
 
     @classmethod
     def connect_app(cls):
-        cls.caller = Caller(123)
+        cls.caller = Caller(123, university_token["Uniwersytet Jagielloński"]["Consumer_key"], university_token["Uniwersytet Jagielloński"]["Consumer_secret"], university_token["Uniwersytet Jagielloński"]["url"])
 
     def test_login(self):
         url = self.caller.connector.url()
@@ -44,7 +44,7 @@ def run_tests(caller: Caller):
     unittest.TextTestRunner().run(suite)
 
 def main():
-    caller = Caller(1)
+    caller = Caller(1, university_token["Uniwersytet Jagielloński"]["Consumer_key"], university_token["Uniwersytet Jagielloński"]["Consumer_secret"], university_token["Uniwersytet Jagielloński"]["url"])
     run_tests(caller)
 
 
