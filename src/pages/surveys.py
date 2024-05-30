@@ -7,7 +7,7 @@ class Surveys():
         self.caller = caller
 
     def get_surveys(self):
-        surveys = self.caller.api.get('services/surveys/surveys_to_fill2', fields= 'name|headline_html|id|start_date|end_date|questions')
+        surveys = self.caller.api.get('services/surveys/surveys_to_fill2', fields= 'name|headline_html|id|start_date|end_date|questions|lecturer[first_name|last_name]|group[course_name|class_type] ')
         json_string = json.dumps(surveys)
         return json_string
     
