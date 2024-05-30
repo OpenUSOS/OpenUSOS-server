@@ -15,8 +15,8 @@ class Surveys():
         try:
             check = self.caller.api.get('services/surveys/fill_out2', survey_id = my_survey_id, answers = my_anserws)
             if check:
-                return "The survey wasn't filled in correctly. Try again."
+                return "Y"
             else:
-                return "Survey sucesfully filled out."
+                return "N"
         except:
-            return "The survey wasn't filled in correctly. Try again."
+            return "Y"
