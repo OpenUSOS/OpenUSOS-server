@@ -12,9 +12,9 @@ class Surveys():
         return json_string
     
     def answer_survey(self, my_survey_id, my_anserws):
+        sprawdz = json.loads(my_anserws)
+        print(sprawdz)
         try:
-            sprawdz = json.loads(my_anserws)
-            print(sprawdz)
             check = self.caller.api.get('services/surveys/fill_out2', survey_id = my_survey_id, answers = my_anserws)
             if check:
                 return "N"
