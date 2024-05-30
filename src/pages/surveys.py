@@ -15,8 +15,8 @@ class Surveys():
         try:
             check = self.caller.api.get('services/surveys/fill_out2', survey_id = my_survey_id, answers = my_anserws)
             if check:
-                return "Y"
-            else:
                 return "N"
+            else:
+                return "Y"
         except:
-            return "Y"
+            return "N"
