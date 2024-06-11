@@ -50,6 +50,8 @@ def handle_one_argument(arg1, used_caller):
         return used_caller.grades.get_tests()
     elif arg1 =='get_surveys':
         return used_caller.surveys.get_surveys()
+    elif arg1 == 'get_tests_top':
+        return used_caller.grades.get_tests_top()
     else:
         return 'Not a valid call, check the spelling or contact me.'
 
@@ -59,6 +61,8 @@ def handle_two_arguments(arg1, arg2, used_caller):
     if arg1 == 'log_in':
         arg2 = int(arg2)
         return used_caller.connector.log_in(arg2)
+    elif arg1 == 'get_tests_node':
+        return used_caller.grades.get_tests_node(arg2)
     else: 
         return 'Not a valid call, check the spelling or contact me.'
     
@@ -145,19 +149,31 @@ info:
 ---------
 tests:
 ---------
-10. id, query1 = get_tests ---- returns a list of dictss, each one with: "term_id" (eg. 22/23Z) and "courses".
+10. id, query1 = get_tests ---- returns a list of dicts, each one with: "term_id" (eg. 22/23Z) and "courses".
 "courses" is a list of the courses that took place during the term. it contains "name" (eg. ASD, sieci) and "tests".
 "tests" is a list of all tests within one course. it contains "name", "description", "points" (of user) "points_max", and "exercises".
 "exercises is a list of all exercises within one test. it contains "name", "description", "points" (of user) and "points_max".
+
+11. id, query1 = get_tests_top ---- returns a list of dicts, each one with: "term_id",  and "courses".
+"courses" is a list of the courses that took place during the term. Each course contains "name" (eg. ASD, sieci) and "nodes_ids".
+"nodes_ids" is a list containing the ids of root nodes in the course (So, like kolokwium, aktywnosc, but not a specific exercise)
+
+Each node_id coresponds to a node.
+Each node is a dict with "name", "description", "points" (of user) "points_max" and "subnodes_ids",
+which is a list containing the ids of the subnodes (Can and will be empty if it's the last node).
+
+These informations can be recived by using:
+12. id, query1 = get_tests_node, query2 = [node_id] ---- returns a dict containing "name", "description", "points", "points_max"
+and "subnodes_ids", which is a list containing ids of the subnodes (Can and will be empty at some point).
 ---------
 surveys:
 ---------
-11. id, query1 = get_surveys ----- returns a list of surveys. each one is a dict containing:
+13. id, query1 = get_surveys ----- returns a list of surveys. each one is a dict containing:
 "name", "id", "headline_html", "start_date", "end_date", lecturer: {"first_name", "last_name"}, "group": {"course_name", "class_type"}
 "questions". each question is a dict with: "id", "number", "display_text_html", "allow_comment",
 "comment_length", "possible_answer". each possible anserw is a dict containing: "id", "display_text_html".
 
-12. id, query1 = answer_survey, query2 = [id of a query you anserw], query3 = [anserw]. Anserws the specific survey. anserw should
+14. id, query1 = answer_survey, query2 = [id of a query you anserw], query3 = [anserw]. Anserws the specific survey. anserw should
 be a JSON-formatted object, mapping question IDs to their answers, {"question1_id": {"answers": ["possible_answer1_id",
 "possible_answer2_id", ...], "comment": "comment or null"}, "question2_id": ...}
 Note, that all values of this objects are strings (because the IDs of possible answers are strings).
@@ -165,13 +181,13 @@ If comment should be left empty or the question does not allow comments, null ha
 ----------
 events:
 ----------
-13. id, query1 = get_events, query2 = [from_date], query3 = [to_date], gets list of events begining from and ending at.
+15. id, query1 = get_events, query2 = [from_date], query3 = [to_date], gets list of events begining from and ending at.
 each object in a list is a dict with "name" that has the name of a programme from which the event is, and "list"
 with the list of the events. each event has a name, start_date, end_date, type, is_day_off (telling if it's a day of).
 ----------
 news:
 ----------
-14. id, query1 = get_news, query2 = [from_date], query3 = [start], query4 = [num] (100 <)
+16. id, query1 = get_news, query2 = [from_date], query3 = [start], query4 = [num] (100 <)
 returns a dict with: 
 "next_page" - true if there are more items. 
 "total" - int showing how many items were matched

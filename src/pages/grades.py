@@ -95,6 +95,45 @@ class Grades():
             lista.append(term)
         json_string = json.dumps(lista)
         return json_string
+    
+    def get_tests_top(self):
+        lista = []
+        answ = self.caller.api.get('services/crstests/participant')
+        for specific_term in answ["tests"]:
+            term = {} #One specific term, eg 22/23 Z
+            term["term_id"] = specific_term
+            term["courses"] = [] #courses happening in a term
+            for root_id in answ["tests"][specific_term]:
+                course = {} #one specific course, eg ASD
+                course["name"] = answ["tests"][specific_term][root_id]["course_edition"]["course_name"] #the name of a course
+                course["nodes_ids"] = [] #The tests in a course, like activity or kolos
+                course_tests = self.caller.api.get('services/crstests/node2', node_id = root_id, fields = 'subnodes[id]')
+                for course_test in course_tests["subnodes"]:
+                    course["nodes_ids"].append(course_test["id"])
+                term["courses"].append(course) 
+            lista.append(term)
+        json_string = json.dumps(lista)
+        return json_string
+    
+    def get_tests_node(self, node_id):
+        node = {}
+        info1 = self.caller.api.get('services/crstests/node2', node_id = int(node_id), fields = 'name|description|subnodes[id]')
+        info2 = self.caller.api.get('services/crstests/task_node_details', id = int(node_id), fields = 'students_points|points_max')
+        node["name"] = info1["name"]
+        node["description"] = info1["description"]
+        node["subnodes_ids"] = []
+        if info2:
+            node["points"] = info2["students_points"]["points"]
+            node["points_max"] = info2["points_max"]
+        else:
+            node["points"] = "-"
+            node["points_max"] = "-"
+
+        for subnode in info1["subnodes"]:
+            node["subnodes_ids"].append(subnode["id"])
+        json_string = json.dumps(node)
+        return json_string
+
 
 
 
