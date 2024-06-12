@@ -106,7 +106,7 @@ class Grades():
             for root_id in answ["tests"][specific_term]:
                 course = {} #one specific course, eg ASD
                 course["name"] = answ["tests"][specific_term][root_id]["course_edition"]["course_name"] #the name of a course
-                course["nodes_id"] = root_id
+                course["node_id"] = root_id
                 term["courses"].append(course) 
             lista.append(term)
         json_string = json.dumps(lista)
