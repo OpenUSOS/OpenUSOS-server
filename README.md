@@ -29,6 +29,7 @@ If you want to self host the server, feel free to do so.
 - follow the rest of the instructions in: https://github.com/OpenUSOS/OpenUSOS#self-hosting
 
 ## Making your own server
-You can create your own server from scratch if you want to, to not have to change anything in the app itself, follow the specifications in api.md.
+You can create your own server from scratch if you want to.   
+To not have to change anything in the app itself, follow the specifications in api.md.
 
 Should you have any problems feel free to contact us.
