@@ -11,8 +11,8 @@ By default the server will run on port :5000
 If you want to self host the server, feel free to do so.
 - purchase or find a free hosting service
 - register tokens for univerisites for which you want your app to work, you can find more information about it here https://apps.usos.edu.pl/developers/api/
-- create a directory and file tokeny/OpenUSOS_data/tokens.py
-- create a token dictionary inside with the following format
+- create a file tokeny/OpenUSOS_data/tokens.py
+- create a dictionary inside with the following format
   
             university_token={
               "Uniwersytet 1" : {
