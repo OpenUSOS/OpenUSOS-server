@@ -13,6 +13,7 @@ If you want to self host the server, feel free to do so.
 - register tokens for univerisites for which you want your app to work, you can find more information about it here https://apps.usos.edu.pl/developers/api/
 - create a directory and file tokeny/OpenUSOS_data/tokens.py
 - create a token dictionary inside with the following format
+  
             university_token={
               "Uniwersytet 1" : {
                 "Consumer_key": "Your consumer key for university 1",
@@ -23,6 +24,7 @@ If you want to self host the server, feel free to do so.
                 "Consumer_secret": "your consumer key for university 2",
                 "url" : "link to USOS api installation of the chosen university"}
             }
+  
 - run the server
 - follow the rest of the instructions in: https://github.com/OpenUSOS/OpenUSOS#self-hosting
 
