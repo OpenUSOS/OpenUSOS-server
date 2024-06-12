@@ -106,10 +106,7 @@ class Grades():
             for root_id in answ["tests"][specific_term]:
                 course = {} #one specific course, eg ASD
                 course["name"] = answ["tests"][specific_term][root_id]["course_edition"]["course_name"] #the name of a course
-                course["nodes_ids"] = [] #The tests in a course, like activity or kolos
-                course_tests = self.caller.api.get('services/crstests/node2', node_id = root_id, fields = 'subnodes[id]')
-                for course_test in course_tests["subnodes"]:
-                    course["nodes_ids"].append(course_test["id"])
+                course["nodes_id"] = root_id
                 term["courses"].append(course) 
             lista.append(term)
         json_string = json.dumps(lista)
@@ -133,7 +130,26 @@ class Grades():
             node["subnodes_ids"].append(subnode["id"])
         json_string = json.dumps(node)
         return json_string
-
+    
+    def get_tests_child(self, node_id):
+            lista = []
+            info1 = self.caller.api.get('services/crstests/node2', node_id = int(node_id), fields = 'subnodes[id]')
+            for subnode in info1["subnodes"]:
+                elem = {}
+                info_sub_1 = self.caller.api.get('services/crstests/node2', node_id = int(subnode["id"]), fields = 'name|description')
+                info_sub_2 = self.caller.api.get('services/crstests/task_node_details', id = int(subnode["id"]), fields = 'students_points|points_max')
+                elem["id"] = subnode["id"]
+                elem["name"] = info_sub_1["name"]
+                elem["description"] = info_sub_1["description"]
+                if info_sub_2:
+                    elem["points"] = info_sub_2["students_points"]["points"]
+                    elem["points_max"] = info_sub_2["points_max"]
+                else:
+                    elem["points"] = "-"
+                    elem["points_max"] = "-"
+                lista.append(elem)
+            json_string = json.dumps(lista)
+            return json_string
 
 
 
