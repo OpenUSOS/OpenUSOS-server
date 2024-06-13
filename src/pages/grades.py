@@ -138,6 +138,7 @@ class Grades():
                 elem = {}
                 info_sub_1 = self.caller.api.get('services/crstests/node2', node_id = int(subnode["id"]), fields = 'name|description')
                 info_sub_2 = self.caller.api.get('services/crstests/task_node_details', id = int(subnode["id"]), fields = 'students_points|points_max')
+                info_sub_3 = self.caller.api.get('services/crstests/grade_node_details', id = int(subnode["id"]), fields = 'grade_type')
                 elem["id"] = subnode["id"]
                 elem["name"] = info_sub_1["name"]
                 elem["description"] = info_sub_1["description"]
@@ -147,6 +148,12 @@ class Grades():
                 else:
                     elem["points"] = "-"
                     elem["points_max"] = "-"
+
+                if info_sub_3:
+                    elem["grade"] = info_sub_3["grade_type"]
+                else:
+                    elem["grade"] = "-"
+                
                 lista.append(elem)
             json_string = json.dumps(lista)
             return json_string
