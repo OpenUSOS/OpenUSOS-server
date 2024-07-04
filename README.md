@@ -2,6 +2,8 @@
 ## Authors: Oskar Kuliński, Filip Ciebiera, Wieńczysław Włodyga   
 This is the code for the server used by the OpenUSOS app: https://github.com/OpenUSOS/OpenUSOS
 
+Heavily based on https://github.com/MUCI/usosapi-python. Thanks to the USOS team for allowing us to use this library.
+
 ## How to use
 To use, run $python app.py
 
